@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
-
+import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader';
 window.speed = 0.01;
 
 // threejs 三要素: scene, camera, renderer
@@ -43,7 +43,7 @@ const loader = new GLTFLoader();
 let mixer = {};// 不知道为什么不起效
 loader.load('./models/Flamingo.glb', function(gltf) {
     const mesh = gltf.scene.children[0];
-    // mesh.position.y = 5;
+    mesh.position.y = 5;
     mesh.rotation.y = - 1;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -51,8 +51,8 @@ loader.load('./models/Flamingo.glb', function(gltf) {
 
     mixer = new THREE.AnimationMixer( mesh );
     // so clipaction method here return an AnimationAction instance
-    mixer.clipAction( gltf.animations[ 0 ] ).setDuration( 1 ).play();
-    // mixers.push( mixer );
+    mixer.clipAction( gltf.animations[ 0 ] ).setDuration( 5 ).play();
+    mixers.push( mixer );
 });
 
 // 加载白色长颈鹿模型
@@ -63,13 +63,39 @@ fbxLoader.load('./models/Giraffe_0.fbx', (fbx)=>{
     fbx.scale.x = .4;
     fbx.scale.z = .4;
     fbx.scale.y = .4;
+    fbx.rotation.y = -100;
     giraffeMixer = new THREE.AnimationMixer(fbx);
     // clipAction return AnimationAction
-    giraffeMixer.clipAction(fbx.animations[0]).setDuration(1).play();
+    giraffeMixer.clipAction(fbx.animations[0]).setDuration(5).play();
 
-    scene.add(fbx);
+    // scene.add(fbx);
 });
 
+// 加载草地模型
+fbxLoader.load('./models/Ground1.fbx', (fbx)=>{
+    fbx.position.z = -6;
+    fbx.position.x = -200;
+    fbx.scale.x = 20;
+    fbx.scale.y = 20;
+    fbx.scale.z = 20;
+    // fbx.scale.x = .4;
+    // fbx.scale.z = .4;
+    // fbx.scale.y = .4;
+    // giraffeMixer = new THREE.AnimationMixer(fbx);
+    // clipAction return AnimationAction
+    // giraffeMixer.clipAction(fbx.animations[0]).setDuration(1).play();
+
+    // scene.add(fbx);
+});
+// 加载ac娘模型
+const mmdloader = new MMDLoader();
+mmdloader.load("./models/ac/ac1.03.pmx", (mesh)=>{
+    mesh.scale.x = 10;
+    mesh.scale.y = 10;
+    mesh.scale.z = 10;
+    
+    scene.add(mesh);
+});
 // 光线
 const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
 hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -78,7 +104,7 @@ hemiLight.position.set( 0, 50, 0 );
 scene.add( hemiLight );
 
 const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
-scene.add( hemiLightHelper );
+// scene.add( hemiLightHelper );
 
 
 const dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -102,7 +128,7 @@ dirLight.shadow.camera.bottom = - d;
 dirLight.shadow.camera.far = 3500;
 dirLight.shadow.bias = - 0.0001;
 const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
-scene.add( dirLightHelper );
+// scene.add( dirLightHelper );
 
 camera.position.z = 250;
 
