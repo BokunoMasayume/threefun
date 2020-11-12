@@ -2,6 +2,8 @@ import * as THREE from "three";
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader';
+
+import {MMDAnimationHelper } from 'three/examples/jsm/animation/MMDAnimationHelper';
 window.speed = 0.01;
 
 // threejs 三要素: scene, camera, renderer
@@ -48,6 +50,7 @@ loader.load('./models/Flamingo.glb', function(gltf) {
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     // scene.add(mesh);
+    window.flamingo = gltf;
 
     mixer = new THREE.AnimationMixer( mesh );
     // so clipaction method here return an AnimationAction instance
@@ -93,7 +96,8 @@ mmdloader.load("./models/ac/ac1.03.pmx", (mesh)=>{
     mesh.scale.x = 10;
     mesh.scale.y = 10;
     mesh.scale.z = 10;
-    
+    mesh.position.y-=100;
+    window.ac = mesh;
     scene.add(mesh);
 });
 // 光线

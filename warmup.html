@@ -1,67 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>warm up</title>
-    <style>
-        html, body{
-            margin: 0;
-            padding: 0;
-        }
-        canvas {
-            display:block;
-        }
-    </style>
-</head>
-<body>
-    <script src="./dist/bundle.js"></script>
-    
-    <!-- <script src="https://threejs.org/build/three.js"></script>
-    <script>
-        // threejs 三要素: scene, camera, renderer
-        const scene = new THREE.Scene();
-        // 参数说明 
-        // FOV, field of view 可视角度 degree
-        // aspect radio, 可视区域宽高比
-        // near clipping plane 最近可渲染距离
-        // far clipping plane 最远可渲染距离
-        const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );// 透视摄像头
-        // 根据选择的渲染器的不同, three会为你创建适合的展示元素和上下文, 这里应该是创建了一个canvas, 并为它搞了个webgl的context
-        const renderer = new THREE.WebGLRenderer();
-
-        renderer.setSize(window.innerWidth, window.innerHeight);// canvas的height和width属性设置
-
-        document.body.appendChild(renderer.domElement);// 把创建的渲染器展示元素(这里就是canvas)加入dom tree
-        /* 现在舞台搭建完毕, 开始表演 */
-
-        // 放个蓝盒子
-        const geometry = new THREE.BoxGeometry(); // 形状
-        const material = new THREE.MeshBasicMaterial({color: 0x00ff00}); // 材质
-        const cube = new THREE.Mesh(geometry, material); // 形状 + 材质 = 物体
-        scene.add(cube);
-
-        // 一条直线
-        const blueMaterial = new THREE.LineBasicMaterial({color: 0x0000ff});
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-10, 0, 0),
-            new THREE.Vector3(0, 10, 0),
-            new THREE.Vector3(10, 0, 0),
-        ]);
-        const line = new THREE.Line(lineGeometry, blueMaterial);
-        scene.add(line);
-
-        camera.position.z = 15;
-
-        function animate() {
-            requestAnimationFrame( animate );
-            cube.rotation.x += .01;
-            cube.rotation.y += .01;
-            renderer.render( scene, camera );
-        }
-        animate();
-
-
-    </script> -->
-</body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Caching</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+  <body>
+  <script src="dist/bundle.e045fad74f6103e3d67c.js"></script></body>
 </html>
