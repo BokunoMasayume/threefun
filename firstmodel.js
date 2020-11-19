@@ -4,8 +4,8 @@ import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
 import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader';
 
 import {MMDAnimationHelper } from 'three/examples/jsm/animation/MMDAnimationHelper';
-window.speed = 0.01;
-
+window.speed = 0.02;
+Window.THREE = THREE;
 // threejs 三要素: scene, camera, renderer
 const scene = new THREE.Scene();
 // 参数说明 
@@ -41,65 +41,67 @@ const line = new THREE.Line(lineGeometry, blueMaterial);
 // scene.add(line);
 
 // 加载弗拉明戈模型
-const loader = new GLTFLoader();
-let mixer = {};// 不知道为什么不起效
-loader.load('./models/Flamingo.glb', function(gltf) {
-    const mesh = gltf.scene.children[0];
-    mesh.position.y = 5;
-    mesh.rotation.y = - 1;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+// const loader = new GLTFLoader();
+// let mixer = {};// 不知道为什么不起效
+// loader.load('./models/Flamingo.glb', function(gltf) {
+    // const mesh = gltf.scene.children[0];
+    // mesh.position.y = 5;
+    // mesh.rotation.y = - 1;
+    // mesh.castShadow = true;
+    // mesh.receiveShadow = true;
     // scene.add(mesh);
-    window.flamingo = gltf;
+    // window.flamingo = gltf;
 
-    mixer = new THREE.AnimationMixer( mesh );
+    // mixer = new THREE.AnimationMixer( mesh );
     // so clipaction method here return an AnimationAction instance
-    mixer.clipAction( gltf.animations[ 0 ] ).setDuration( 5 ).play();
-    mixers.push( mixer );
-});
+    // mixer.clipAction( gltf.animations[ 0 ] ).setDuration( 5 ).play();
+    // mixers.push( mixer );
+// });
 
 // 加载白色长颈鹿模型
 const fbxLoader = new FBXLoader();
 let giraffeMixer = {};
-fbxLoader.load('./models/Giraffe_0.fbx', (fbx)=>{
-    fbx.position.z = -60;
-    fbx.scale.x = .4;
-    fbx.scale.z = .4;
-    fbx.scale.y = .4;
-    fbx.rotation.y = -100;
+fbxLoader.load('./privatemodels/ac/ACFUN2.fbx', (fbx)=>{
+// fbxLoader.load('./models/Giraffe_0.fbx', (fbx)=>{
+    fbx.position.z = 0;
+    fbx.position.y = -590;
+    fbx.scale.x = 4;
+    fbx.scale.z = 4;
+    fbx.scale.y = 4;
+    fbx.rotation.y = -0;
     giraffeMixer = new THREE.AnimationMixer(fbx);
     // clipAction return AnimationAction
     giraffeMixer.clipAction(fbx.animations[0]).setDuration(5).play();
-
-    // scene.add(fbx);
+    window.fbx = fbx;
+    scene.add(fbx);
 });
 
 // 加载草地模型
-fbxLoader.load('./models/Ground1.fbx', (fbx)=>{
-    fbx.position.z = -6;
-    fbx.position.x = -200;
-    fbx.scale.x = 20;
-    fbx.scale.y = 20;
-    fbx.scale.z = 20;
+// fbxLoader.load('./models/Ground1.fbx', (fbx)=>{
+    // fbx.position.z = -6;
+    // fbx.position.x = -200;
+    // fbx.scale.x = 20;
+    // fbx.scale.y = 20;
+    // fbx.scale.z = 20;
     // fbx.scale.x = .4;
     // fbx.scale.z = .4;
     // fbx.scale.y = .4;
     // giraffeMixer = new THREE.AnimationMixer(fbx);
     // clipAction return AnimationAction
     // giraffeMixer.clipAction(fbx.animations[0]).setDuration(1).play();
-
+// 
     // scene.add(fbx);
-});
+// });
 // 加载ac娘模型
-const mmdloader = new MMDLoader();
-mmdloader.load("./models/ac/ac1.03.pmx", (mesh)=>{
-    mesh.scale.x = 10;
-    mesh.scale.y = 10;
-    mesh.scale.z = 10;
-    mesh.position.y-=100;
-    window.ac = mesh;
-    scene.add(mesh);
-});
+// const mmdloader = new MMDLoader();
+// mmdloader.load("./models/ac/ac1.03.pmx", (mesh)=>{
+    // mesh.scale.x = 10;
+    // mesh.scale.y = 10;
+    // mesh.scale.z = 10;
+    // mesh.position.y-=100;
+    // window.ac = mesh;
+    // scene.add(mesh);
+// });
 // 光线
 const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
 hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -138,10 +140,10 @@ camera.position.z = 250;
 
 function animate() {
     requestAnimationFrame( animate );
-    cube.rotation.x += .01;
-    cube.rotation.y += .01;
+    // cube.rotation.x += .01;
+    // cube.rotation.y += .01;
     // window.mixer=mixer;
-    mixer.update && mixer.update(10.01);
+    // mixer.update && mixer.update(10.01);
     giraffeMixer.update && giraffeMixer.update(window.speed);
     renderer.render( scene, camera );
 }
