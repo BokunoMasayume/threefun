@@ -29,10 +29,11 @@
         import {FilmPass} from '../node_modules/three/examples/jsm/postprocessing/FilmPass.js';
         import {FocusShader} from '../node_modules/three/examples/jsm/shaders/FocusShader.js';
         
-        Window.THREE = THREE;
+        window.THREE = THREE;
 
         let camera, scene, renderer, mesh;
-        let parent;
+        let parent, mixer;
+        let ambLight = new THREE.AmbientLight(0x404040);
 
         const meshes = [], clonemeshes = [];
 
@@ -49,9 +50,11 @@
         function init() {
             const container = document.querySelector('#container');
             camera = new THREE.PerspectiveCamera( 20, window.innerWidth/ window.innerHeight, 1, 50000 );
-            camera.position.set(0, 700, 7000);
+            camera.position.set(0, 700, 2500);
 
             scene = new THREE.Scene();
+            scene.add(ambLight);
+
 
             scene.background = new THREE.Color(0x000104);
             scene.fog = new THREE.FogExp2(0x000104, .0000675);
@@ -60,13 +63,22 @@
 
             const loader = new FBXLoader();
 
-            loader.load('../privatemodels/ac/ACFUN1.fbx', (object) => {
+            loader.load('../privatemodels/ac/ACFUN2.fbx', (object) => {
                 console.log(object);
                 window.ac = object;
 
-                const positions = combineBuffer(object, 'position');
+                // const positions = combineBuffer(object, 'position');
+                recurChangeMaterial(object);
+                
 
-                createMesh( positions, scene, 4.05, 0, -350, 0, 0xffffff);
+                mixer = new THREE.AnimationMixer(object);
+                // clipAction return AnimationAction
+                mixer.clipAction(object.animations[0]).setDuration(5).play();
+
+                // createMesh( positions, scene, 4.05, 0, -350, 0, 0xffffff);
+                object.position.y = -450;
+                object.scale.x = object.scale.y = object.scale.z = 4.05;
+                parent.add(object);
             });
 
             renderer = new THREE.WebGLRenderer();
@@ -100,10 +112,45 @@
 
             composer.addPass(renderModel);
             composer.addPass(effectBloom);
-            composer.addPass(effectFilm);
+            // composer.addPass(effectFilm);
             composer.addPass(effectFocus);
 
 
+        }
+
+        // 递归更改所有mesh的material
+        function recurChangeMaterial(object) {
+            // let name;
+            let oldmaterial;
+            object.traverse((child) => {
+                if (child.isMesh) {
+                    // name = child.material.name;
+                    oldmaterial = child.material;
+                    if (oldmaterial instanceof Array) {
+                        child.material = [];
+                        oldmaterial.forEach((mater) => {
+                            let color = 0xffffff;
+                            // test
+                            if (mater.name =='mouth') {
+                                color = 0xff0000;
+                            }else if (mater.name == 'eye') {
+                                color = 0x00ff00;
+                            } else if (mater.name = 'face') {
+                                color = 0x0000ff;
+                            }
+                            let m = new THREE.MeshBasicMaterial({color});
+                            m.name = mater.name;
+                            m.skinning = mater.skinning;
+                            child.material.push(m);
+                        });
+                    } else {
+                        child.material = new THREE.MeshBasicMaterial({color: 0xffffff});
+                        child.material.name = oldmaterial.name;
+                        child.material.skinning = oldmaterial.skinning;
+                    }
+                    
+                }
+            });
         }
 
         // 提取模型的所有顶点， 转化为一个僵硬的集合
@@ -180,8 +227,12 @@
         function render () {
             let delta = 10* clock.getDelta();
             delta = delta < 2? delta: 2;
-            parent.rotation.y += -0.02 * delta;
+            // parent.rotation.y += -0.02 * delta;
             // 渲染
+            mixer && mixer.update(delta *.1);
+
+            // renderer.render( scene, camera );
+
             composer.render(.01);
         }
     </script>
